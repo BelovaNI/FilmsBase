@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 public class Film implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
     @JsonSetter("kinopoiskId")

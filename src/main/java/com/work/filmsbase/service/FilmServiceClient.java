@@ -6,7 +6,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 
 @Service
@@ -36,8 +35,8 @@ public class FilmServiceClient {
     }
 
     public ResponseEntity<String> executeRestCall() {
-        String URL = env.getProperty("api.url");
-        String token = env.getProperty("api.key");
+        String URL = "https://kinopoiskapiunofficial.tech/api/v2.2/films";
+        String token = "3fe11d74-ffc5-424a-aa45-1a9878b04c7c";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-API-KEY", token);
