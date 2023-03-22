@@ -1,32 +1,39 @@
 package com.work.filmsbase.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
+
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
-public class Film {
+public class Film implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
-    @NonNull
-    @Column
+    @JsonSetter("kinopoiskId")
     private Long filmId;
-    @NonNull
-    @Column
+    @JsonSetter("nameEn")
     private String filmName;
-    @NonNull
-    @Column
+    @JsonSetter("year")
     private Integer year;
-    @NonNull
-    @Column
+    @JsonSetter("ratingKinopoisk")
     private Double rating;
-    @NonNull
-    @Column
+    @JsonSetter("shortDescription")
     private String description;
+
+    public Film(@NonNull Long filmId, @NonNull String filmName, @NonNull Integer year, @NonNull Double rating, @NonNull String description) {
+        this.filmId = filmId;
+        this.filmName = filmName;
+        this.year = year;
+        this.rating = rating;
+        this.description = description;
+    }
 
     @Override
     public String toString() {
@@ -37,5 +44,18 @@ public class Film {
                 ", rating=" + rating +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return Objects.equals(filmId, film.filmId) && Objects.equals(filmName, film.filmName) && Objects.equals(year, film.year) && Objects.equals(rating, film.rating) && Objects.equals(description, film.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(filmId, filmName, year, rating, description);
     }
 }
