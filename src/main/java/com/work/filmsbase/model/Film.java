@@ -1,8 +1,5 @@
 package com.work.filmsbase.model;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,20 +8,20 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table
 public class Film implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
-    @JsonSetter("kinopoiskId")
+
     private Long filmId;
-    @JsonSetter("nameEn")
+
     private String filmName;
-    @JsonSetter("year")
+
     private Integer year;
-    @JsonSetter("ratingKinopoisk")
+
     private Double rating;
-    @JsonSetter("shortDescription")
+
     private String description;
 
     public Film(@NonNull Long filmId, @NonNull String filmName, @NonNull Integer year, @NonNull Double rating, @NonNull String description) {

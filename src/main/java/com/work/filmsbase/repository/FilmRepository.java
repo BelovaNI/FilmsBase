@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FilmRepository extends JpaRepository<Film, Long>, CrudRepository<Film, Long> {
+public interface FilmRepository extends JpaRepository<Film, Long> {
     void deleteFilmsById(Long id);
-    List<Film> readAllBy();
+    List<Film> findAll();
     Film findFilmByFilmName(String name);
     Film findFilmByFilmId(Long id);
     @Override
