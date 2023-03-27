@@ -1,5 +1,6 @@
 package com.work.filmsbase;
 
+import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.configuration.ConfigProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,4 +26,6 @@ public class FilmsBaseApplication {
     public ModelMapper modelMapper(){ return new ModelMapper(); }
     @Bean
     ConfigProperties configProperties() {return new ConfigProperties();}
+    @Bean
+    FilmFilterDTO filmFilterDTO(){return new FilmFilterDTO();}
 }

@@ -1,34 +1,39 @@
 package com.work.filmsbase.controller;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.work.filmsbase.client.RestTemplateClient;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.FilmServiceImpl;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
 @NoArgsConstructor
 @RequestMapping("")
+@RestController
 public class FilmController {
     FilmServiceImpl filmService;
-    RestTemplateClient restTemplate;
     @Autowired
-    public FilmController(FilmServiceImpl filmService, RestTemplateClient restTemplate) {
+    public FilmController(FilmServiceImpl filmService) {
         this.filmService = filmService;
-        this.restTemplate = restTemplate;
     }
-//    @RequestMapping (value = "/films", method = RequestMethod.GET)  // сюда надо передавать параметры для поиска - сделать дто FilmFilter
-//    public String saveToDataBase() throws JsonProcessingException {
-////        ResponseEntity<String> list = filmServiceClient.executeRestCall();
-////        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-////        Film film = objectMapper.readValue(list.getBody(), Film.class);
-//////        if(film != null) {
-//////            filmServiceClient.save();   // убрать проверку на null
-//////        }else {
-//////            return "FFFailed!";
-//////        }
-//////        return "Save is successfully";
-//    }
-}
+
+    @RequestMapping(value = "/films", method = RequestMethod.GET)
+    public ResponseEntity<?> getResponse(){
+        try{
+            ResponseEntity<?> response = filmService.getAllFilmsByFilterFromKinopoisk();
+            Film films = new ObjectMapper().readValue((JsonParser) response.getBody(), Film.class);
+            filmService.save(films);
+        }catch(Exception ex){
+            String errorMessage;
+            errorMessage ="Not found films" + ex + " <== error";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    }
+

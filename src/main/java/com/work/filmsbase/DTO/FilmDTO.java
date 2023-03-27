@@ -1,5 +1,4 @@
 package com.work.filmsbase.DTO;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
