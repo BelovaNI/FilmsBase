@@ -13,7 +13,7 @@ public class Film implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+@Column
     private Long filmId;
 
     private String filmName;

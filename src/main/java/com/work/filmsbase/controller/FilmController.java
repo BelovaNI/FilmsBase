@@ -1,6 +1,7 @@
 package com.work.filmsbase.controller;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.FilmServiceImpl;
 import lombok.NoArgsConstructor;
@@ -24,13 +25,12 @@ public class FilmController {
     @RequestMapping(value = "/films", method = RequestMethod.GET)
     public ResponseEntity<?> getResponse(){
         try{
-            ResponseEntity<?> response = filmService.getAllFilmsByFilterFromKinopoisk();
-            Film films = new ObjectMapper().readValue((JsonParser) response.getBody(), Film.class);
-            filmService.save(films);
+            List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk();
+            System.out.println(response);
         }catch(Exception ex){
             String errorMessage;
-            errorMessage ="Not found films" + ex + " <== error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            errorMessage ="Фильмы по данному запросу не найдены " + ex + " <== error";
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

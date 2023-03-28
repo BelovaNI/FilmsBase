@@ -13,15 +13,13 @@ import java.util.Map;
 @NoArgsConstructor
 @Component
 public class RestTemplateClient {
-    RestTemplate restTemplate;
     ConfigProperties configProperties;
 
     @Autowired
-    public RestTemplateClient(RestTemplate restTemplate, ConfigProperties configProperties) {
-        this.restTemplate = restTemplate;
+    public RestTemplateClient(ConfigProperties configProperties) {
         this.configProperties = configProperties;
     }
-    public String getComponentsBuilder(FilmFilterDTO filmFilterDTO) {
+    public String getURI(FilmFilterDTO filmFilterDTO) {
         String componentsBuilder = UriComponentsBuilder.fromPath(configProperties.getUrl())
                 .queryParam("order", filmFilterDTO.getOrder())
                 .queryParam("type", filmFilterDTO.getType())
@@ -30,10 +28,7 @@ public class RestTemplateClient {
         return componentsBuilder;
     }
     public  String getKey() {
-        return "X-API-KEY=" + configProperties.getKey();
-    }
-    public ResponseEntity<String> executeRestCall(String url, HttpMethod get, HttpEntity<String> entity, Class<String> stringClass, Map<String, String> params) {
-        ResponseEntity<String> film = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
-        return film;
+        return configProperties.getKey();
     }
 }
+
