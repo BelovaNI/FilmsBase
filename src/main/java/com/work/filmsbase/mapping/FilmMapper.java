@@ -19,12 +19,18 @@ public class FilmMapper {
         this.filmRepository = filmRepository;
         this.mapper = mapper;
     }
-    private FilmDTO convertToDTO(Film film) {
+    public FilmDTO convertToDTO(Film film) {
         mapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
         FilmDTO filmDTO = mapper
                 .map(film, FilmDTO.class);
         return filmDTO;
+    }
+
+    public Film convertToFilm(FilmDTO filmDTO){
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        Film film = mapper.map(filmDTO, Film.class);
+        return film;
     }
     public List<FilmDTO> getAllFilms() {
         return ((List<Film>) filmRepository

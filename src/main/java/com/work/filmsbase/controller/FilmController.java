@@ -1,6 +1,4 @@
 package com.work.filmsbase.controller;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.FilmServiceImpl;
@@ -23,9 +21,9 @@ public class FilmController {
     }
 
     @RequestMapping(value = "/films", method = RequestMethod.GET)
-    public ResponseEntity<?> getResponse(){
+    public ResponseEntity<?> getResponse(@ModelAttribute FilmFilterDTO filmFilterDTO){
         try{
-            List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk();
+            List<Film> response = filmService.addParamsForSearch(filmFilterDTO);
             System.out.println(response);
         }catch(Exception ex){
             String errorMessage;
