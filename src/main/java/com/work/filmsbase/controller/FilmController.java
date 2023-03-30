@@ -1,5 +1,6 @@
 package com.work.filmsbase.controller;
 import com.work.filmsbase.DTO.FilmFilterDTO;
+import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.FilmServiceImpl;
 import lombok.NoArgsConstructor;
@@ -15,15 +16,17 @@ import java.util.List;
 @RestController
 public class FilmController {
     FilmServiceImpl filmService;
+    FilmMapper filmMapper;
     @Autowired
-    public FilmController(FilmServiceImpl filmService) {
+    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper) {
         this.filmService = filmService;
+        this.filmMapper = filmMapper;
     }
 
     @RequestMapping(value = "/films", method = RequestMethod.GET)
     public ResponseEntity<?> getResponse(@ModelAttribute FilmFilterDTO filmFilterDTO){
         try{
-            List<Film> response = filmService.addParamsForSearch(filmFilterDTO);
+            List<Film> response = filmService.addParamsForSearch();
             System.out.println(response);
         }catch(Exception ex){
             String errorMessage;

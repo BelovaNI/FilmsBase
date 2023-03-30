@@ -1,17 +1,17 @@
 package com.work.filmsbase.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 public class FilmDTO {
     @JsonIgnore
     private Long id;
-    private Long filmId;
-    private String filmName;
+    private Long kinopoiskId;
+    private String nameEn;
     private Integer year;
-    private Double rating;
-    private String description;
+    private Double ratingKinopoisk;
+    private String shortDescription;
 }

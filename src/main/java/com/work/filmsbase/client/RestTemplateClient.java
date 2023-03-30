@@ -35,17 +35,14 @@ public class RestTemplateClient {
                 .build().toUriString();
         return componentsBuilder;
     }
-    public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO){
+    public ResponseEntity<FilmDTO> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO){
         String token = configProperties.getKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-API-KEY", token);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         ResponseEntity<FilmDTO> film = restTemplate.exchange(getURI(filmFilterDTO), HttpMethod.GET, entity, FilmDTO.class);
-        Film film1 = filmMapper.convertToFilm(film.getBody());
-        List<Film> list = new ArrayList<>();
-        list.add(film1);
-        return list;
+        return film;
     }
 }
 
