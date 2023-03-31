@@ -24,7 +24,7 @@ public class FilmController {
         this.filmMapper = filmMapper;
     }
 
-    @RequestMapping(value = "/films", method = RequestMethod.GET)
+    @RequestMapping(value = "/films/search-by-keyword", method = RequestMethod.GET)
     public ResponseEntity<?> getResponse(@ModelAttribute FilmFilterDTO filmFilterDTO){
         try{
             List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);

@@ -40,10 +40,12 @@ public class FilmServiceImpl {
         
         public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO) {
             ResponseEntity<FilmGetResponseDTO> responseEntity = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
-            List<Film> list = new ArrayList<>();
+            try{
         if(responseEntity.hasBody()) {
-            return responseEntity.getBody().getItems().stream().map(filmMapper::convertToFilm).collect(Collectors.toList());
-        }
+            return responseEntity.getBody().getFilms().stream().map(filmMapper::convertToFilm).collect(Collectors.toList());
+        }}catch (Exception e) {
+                e.printStackTrace();
+            }
         return null;
         }
 }

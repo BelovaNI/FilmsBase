@@ -10,13 +10,13 @@ import lombok.*;
 public class FilmDTO {
     @JsonIgnore
     private Long id;
-    @JsonSetter("kinopoiskId")
+    @JsonSetter("filmId")
     private Long filmId;
     @JsonSetter("nameRu")
     private String filmName;
     @JsonSetter("year")
     private Integer year;
-    @JsonSetter("ratingKinopoisk")
+    @JsonSetter("rating")
     private Double rating;
     @JsonSetter("description")
     private String description;

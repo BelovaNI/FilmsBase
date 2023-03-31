@@ -8,7 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilmGetResponseDTO {
-    private long total;
-    private long totalPages;
-    private List<FilmDTO> items;
+    private String keyword;
+    private Integer pagesCount;
+    private List<FilmDTO> films;
 }

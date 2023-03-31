@@ -1,19 +1,14 @@
 package com.work.filmsbase.client;
-import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.DTO.FilmGetResponseDTO;
 import com.work.filmsbase.configuration.ConfigProperties;
 import com.work.filmsbase.mapping.FilmMapper;
-import com.work.filmsbase.model.Film;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Component
@@ -29,13 +24,15 @@ public class RestTemplateClient {
         this.filmMapper = filmMapper;
     }
     public String getURI(FilmFilterDTO filmFilterDTO) {
-        String componentsBuilder = UriComponentsBuilder.fromUriString(configProperties.getUrl())
-                .queryParam("yearFrom", filmFilterDTO.getYearFrom())
-                .queryParam("yearTo", filmFilterDTO.getYearTo())
-                .queryParam("type", filmFilterDTO.getType())
-                .queryParam("keyword", filmFilterDTO.getKeyword())
-                .queryParam("genres", filmFilterDTO.getGenres())
-                .build().toUriString();
+        String componentsBuilder = null;
+        try {
+            componentsBuilder = UriComponentsBuilder.fromUriString(configProperties.getUrl() + "/" + "search-by-keyword")
+                    .queryParam("keyword", filmFilterDTO.getKeyword())
+                    .queryParam("page", filmFilterDTO.getPage())
+                    .build().toUriString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return componentsBuilder;
     }
     public ResponseEntity<FilmGetResponseDTO> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO){

@@ -10,14 +10,8 @@ import java.util.List;
 @Component
 public class FilmFilterDTO {
     @NonNull
-    Integer yearFrom;
-    @NonNull
-    Integer yearTo;
-    @NonNull
-    String type;
-    @NonNull
     String keyword;
     @NonNull
-    List<Integer> genres;
+    Integer page;
 
 }
