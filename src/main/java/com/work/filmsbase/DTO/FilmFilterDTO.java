@@ -1,6 +1,7 @@
 package com.work.filmsbase.DTO;
 import lombok.*;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -9,18 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class FilmFilterDTO {
     @NonNull
-    String order;
+    Integer yearFrom;
+    @NonNull
+    Integer yearTo;
     @NonNull
     String type;
     @NonNull
     String keyword;
+    @NonNull
+    List<Integer> genres;
 
-    @Override
-    public String toString() {
-        return "FilmFilterDTO{" +
-                "order='" + order + '\'' +
-                ", type='" + type + '\'' +
-                ", keyword='" + keyword + '\'' +
-                '}';
-    }
 }

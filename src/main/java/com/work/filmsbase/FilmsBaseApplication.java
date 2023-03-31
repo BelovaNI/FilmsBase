@@ -19,10 +19,7 @@ public class FilmsBaseApplication {
     public static void main(String[] args) {
         SpringApplication.run(FilmsBaseApplication.class, args);
     }
-    @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
+
 
     @Bean
     public ModelMapper modelMapper(){ return new ModelMapper(); }

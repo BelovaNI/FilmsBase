@@ -1,6 +1,7 @@
 package com.work.filmsbase.client;
 import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
+import com.work.filmsbase.DTO.FilmGetResponseDTO;
 import com.work.filmsbase.configuration.ConfigProperties;
 import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
@@ -29,19 +30,21 @@ public class RestTemplateClient {
     }
     public String getURI(FilmFilterDTO filmFilterDTO) {
         String componentsBuilder = UriComponentsBuilder.fromUriString(configProperties.getUrl())
-                .queryParam("order", filmFilterDTO.getOrder())
+                .queryParam("yearFrom", filmFilterDTO.getYearFrom())
+                .queryParam("yearTo", filmFilterDTO.getYearTo())
                 .queryParam("type", filmFilterDTO.getType())
                 .queryParam("keyword", filmFilterDTO.getKeyword())
+                .queryParam("genres", filmFilterDTO.getGenres())
                 .build().toUriString();
         return componentsBuilder;
     }
-    public ResponseEntity<FilmDTO> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO){
+    public ResponseEntity<FilmGetResponseDTO> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO){
         String token = configProperties.getKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-API-KEY", token);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-        ResponseEntity<FilmDTO> film = restTemplate.exchange(getURI(filmFilterDTO), HttpMethod.GET, entity, FilmDTO.class);
+        ResponseEntity<FilmGetResponseDTO> film = restTemplate.exchange(getURI(filmFilterDTO), HttpMethod.GET, entity, FilmGetResponseDTO.class);
         return film;
     }
 }

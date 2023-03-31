@@ -1,6 +1,6 @@
 package com.work.filmsbase.service;
-import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
+import com.work.filmsbase.DTO.FilmGetResponseDTO;
 import com.work.filmsbase.client.RestTemplateClient;
 import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -37,15 +38,13 @@ public class FilmServiceImpl {
             return filmRepository.save(entity);
         }
         
-        public List<Film> addParamsForSearch(){
-        FilmFilterDTO filmFilterDTO = new FilmFilterDTO("YEAR", "FILM", "world");
-        ResponseEntity<FilmDTO> params = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
-        List<Film> list = new ArrayList<>();
-        if(params.hasBody()) {
-            Film film = filmMapper.convertToFilm(params.getBody());
-            list.add(film);
+        public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO) {
+            ResponseEntity<FilmGetResponseDTO> responseEntity = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
+            List<Film> list = new ArrayList<>();
+        if(responseEntity.hasBody()) {
+            return responseEntity.getBody().getItems().stream().map(filmMapper::convertToFilm).collect(Collectors.toList());
         }
-        return list;
+        return null;
         }
 }
 

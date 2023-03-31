@@ -1,5 +1,6 @@
 package com.work.filmsbase.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,9 +10,26 @@ import lombok.*;
 public class FilmDTO {
     @JsonIgnore
     private Long id;
-    private Long kinopoiskId;
-    private String nameEn;
+    @JsonSetter("kinopoiskId")
+    private Long filmId;
+    @JsonSetter("nameRu")
+    private String filmName;
+    @JsonSetter("year")
     private Integer year;
-    private Double ratingKinopoisk;
-    private String shortDescription;
+    @JsonSetter("ratingKinopoisk")
+    private Double rating;
+    @JsonSetter("description")
+    private String description;
+
+    @Override
+    public String toString() {
+        return "FilmDTO{" +
+                "id=" + id +
+                ", filmId=" + filmId +
+                ", filmName='" + filmName + '\'' +
+                ", year=" + year +
+                ", rating=" + rating +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
