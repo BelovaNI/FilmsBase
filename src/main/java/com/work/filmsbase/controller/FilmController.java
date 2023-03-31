@@ -28,6 +28,9 @@ public class FilmController {
     public ResponseEntity<?> getResponse(@ModelAttribute FilmFilterDTO filmFilterDTO){
         try{
             List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
+            if (filmService.copyFilmsInDataBase(response) == true) {
+                System.out.println("Send mail message");
+            }
             log.info("response is {}", response);
             return ResponseEntity.ok(response);
         }catch(Exception ex){

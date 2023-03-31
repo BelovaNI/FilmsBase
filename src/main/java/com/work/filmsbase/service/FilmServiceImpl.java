@@ -48,5 +48,20 @@ public class FilmServiceImpl {
             }
         return null;
         }
+
+        public boolean copyFilmsInDataBase(List<Film> list) {
+        List<Film> dataBase = getAllFilms();
+        List<Film> cloneList = new ArrayList<>();
+        int i = 0;
+            if (!dataBase.equals(list)) {
+                cloneList.addAll(0, list);
+                while (!(cloneList.isEmpty())){
+                    save(cloneList.get(i));
+                    i++;
+                }
+                return true;
+            }
+            return false;
+        }
 }
 

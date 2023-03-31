@@ -16,15 +16,15 @@ public class Film implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
-    @JsonSetter("kinopoiskId")
+    @JsonSetter("filmId")
     private Long filmId;
-    @JsonSetter("nameEn")
+    @JsonSetter("nameRu")
     private String filmName;
     @JsonSetter("year")
     private Integer year;
-    @JsonSetter("ratingKinopoisk")
+    @JsonSetter("rating")
     private Double rating;
-    @JsonSetter("shortDescription")
+    @JsonSetter("description")
     private String description;
 
     public Film(@NonNull Long filmId, @NonNull String filmName, @NonNull Integer year, @NonNull Double rating, @NonNull String description) {
