@@ -24,7 +24,7 @@ public class RestTemplateClient {
         this.filmMapper = filmMapper;
     }
     public String getURI(FilmFilterDTO filmFilterDTO) {
-        String componentsBuilder = null;
+        String componentsBuilder;
         try {
             componentsBuilder = UriComponentsBuilder.fromUriString(configProperties.getUrl() + "/" + "search-by-keyword")
                     .queryParam("keyword", filmFilterDTO.getKeyword())

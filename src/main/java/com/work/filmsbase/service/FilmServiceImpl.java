@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
-public class FilmServiceImpl {
+public class FilmServiceImpl implements FilmService{
     FilmMapper filmMapper;
     FilmFilterDTO filmFilterDTO;
     RestTemplateClient restTemplateClient;
     FilmRepository filmRepository;
+
     @Autowired
     public FilmServiceImpl(FilmMapper filmMapper, FilmFilterDTO filmFilterDTO, RestTemplateClient restTemplateClient, FilmRepository filmRepository) {
         this.filmMapper = filmMapper;
@@ -27,41 +28,32 @@ public class FilmServiceImpl {
         this.restTemplateClient = restTemplateClient;
         this.filmRepository = filmRepository;
     }
-        public List<Film> getAllFilms(){
-            return filmRepository.findAll();
-        }
-        public Film getByFilmName(String name) {return filmRepository.findFilmByFilmName(name);}
-        public Film getByFilmId(Long id){
-            return filmRepository.findFilmByFilmId(id);
-        }
-        public  <S extends Film> S save(S entity){
-            return filmRepository.save(entity);
-        }
-        
-        public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO) {
-            ResponseEntity<FilmGetResponseDTO> responseEntity = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
-            try{
-        if(responseEntity.hasBody()) {
-            return responseEntity.getBody().getFilms().stream().map(filmMapper::convertToFilm).collect(Collectors.toList());
-        }}catch (Exception e) {
-                e.printStackTrace();
-            }
-        return null;
-        }
+    public <S extends Film> S save(S entity) {
+        return filmRepository.save(entity);
+    }
 
-        public boolean copyFilmsInDataBase(List<Film> list) {
-        List<Film> dataBase = getAllFilms();
-        List<Film> cloneList = new ArrayList<>();
-        int i = 0;
-            if (!dataBase.equals(list)) {
-                cloneList.addAll(0, list);
-                while (!(cloneList.isEmpty())){
-                    save(cloneList.get(i));
-                    i++;
-                }
-                return true;
+    public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO) {
+        ResponseEntity<FilmGetResponseDTO> responseEntity = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
+        try {
+            if (responseEntity.hasBody()) {
+                return responseEntity.getBody().getFilms().stream().map(filmMapper::convertToFilm).collect(Collectors.toList());
             }
-            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    public List<Film> copyFilmsInDataBase(List<Film> list) {
+        List<Film> sendList = new ArrayList<>();
+        for (Film film: list) {
+            if (!filmRepository.existsFilmByFilmId(film.getFilmId())) {
+                save(film);
+                sendList.add(film);
+            }
+        }
+        return sendList;
+    }
 }
+
 

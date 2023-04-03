@@ -1,4 +1,5 @@
 package com.work.filmsbase.controller;
+import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
@@ -28,9 +29,7 @@ public class FilmController {
     public ResponseEntity<?> getResponse(@ModelAttribute FilmFilterDTO filmFilterDTO){
         try{
             List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
-            if (filmService.copyFilmsInDataBase(response) == true) {
-                System.out.println("Send mail message");
-            }
+            List<Film> sendList = filmService.copyFilmsInDataBase(response);
             log.info("response is {}", response);
             return ResponseEntity.ok(response);
         }catch(Exception ex){
@@ -38,6 +37,11 @@ public class FilmController {
             errorMessage ="Фильмы по данному запросу не найдены " + ex + " <== error";
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
+    }
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String searchFilmInDB(@ModelAttribute FilmDTO filmDTO) throws NullPointerException {
+
+        return "cars";
     }
 
     }

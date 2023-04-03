@@ -9,9 +9,7 @@ import java.util.List;
 
 @Repository
 public interface FilmRepository extends JpaRepository<Film, Long> {
-    List<Film> findAll();
-    Film findFilmByFilmName(String name);
-    Film findFilmByFilmId(Long id);
+    boolean existsFilmByFilmId(Long filmId);
     @Override
     <S extends Film> S save(S entity);
 }
