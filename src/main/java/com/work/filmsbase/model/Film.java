@@ -37,13 +37,12 @@ public class Film implements Serializable {
 
     @Override
     public String toString() {
-        return "Film{" +
-                "filmId=" + filmId +
-                ", filmName='" + filmName + '\'' +
-                ", year=" + year +
-                ", rating=" + rating +
-                ", description='" + description + '\'' +
-                '}';
+        return "Фильм " + '\n' +
+                "filmId - " + filmId + '\n' +
+                "название - " + filmName + '\n' +
+                "год - " + year + '\n' +
+                "рейтинг - " + rating + '\n' +
+                "описание - " + description + '\n';
     }
 
     @Override

@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.List;
 
 @NoArgsConstructor
@@ -42,13 +44,11 @@ public class FilmController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchFilmInDB(@ModelAttribute FilmDTO filmDTO, @RequestParam(required = false, defaultValue = "1") int page,
-                                 @RequestParam(required = false, defaultValue = "10") int size,
-                                 @RequestParam(required = false) String name,
-                                 @RequestParam(required = false) String direction) throws NullPointerException {
+    public String searchFilmInDB(@ModelAttribute FilmDTO filmDTO, FilmFilterDTO filmFilterDTO,
+                                 @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                 @RequestParam(name = "size", required = false, defaultValue = "2") int size) throws NullPointerException {
         try {
             List<Film> answer = filmService.searchFromDataBase(filmDTO, PageRequest.of(page, size));
-            filmService.sortByParamNameAndDirection(answer, name, direction);
             return answer.toString();
         }catch (Exception e){
             return "Не найдены параметры для поиска " + e;

@@ -8,29 +8,34 @@ import com.work.filmsbase.model.Film;
 import com.work.filmsbase.repository.FilmRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 @NoArgsConstructor
 public class FilmServiceImpl implements FilmService{
     FilmMapper filmMapper;
-    FilmFilterDTO filmFilterDTO;
     RestTemplateClient restTemplateClient;
     FilmRepository filmRepository;
-
+    EntityManager entityManager;
+    JavaMailSender javaMailSender;
     @Autowired
-    public FilmServiceImpl(FilmMapper filmMapper, FilmFilterDTO filmFilterDTO, RestTemplateClient restTemplateClient, FilmRepository filmRepository) {
+    public FilmServiceImpl(FilmMapper filmMapper, RestTemplateClient restTemplateClient, FilmRepository filmRepository, EntityManager entityManager) {
         this.filmMapper = filmMapper;
-        this.filmFilterDTO = filmFilterDTO;
         this.restTemplateClient = restTemplateClient;
         this.filmRepository = filmRepository;
+        this.entityManager = entityManager;
     }
     @Override
     public <S extends Film> S save(S entity) {
@@ -61,23 +66,27 @@ public class FilmServiceImpl implements FilmService{
     }
     @Override
     public List<Film> searchFromDataBase(FilmDTO filmDTO, PageRequest pageRequest){
-        List <Film> resultList = new ArrayList<>();
-        if(filmDTO.getFilmName() != null | filmDTO.getYear() != null | filmDTO.getRating() != null){
-            List<Film> name = filmRepository.findFilmByFilmName(filmDTO.getFilmName());
-            List<Film> year = filmRepository.findFilmByYear(filmDTO.getYear());
-            List<Film> rating = filmRepository.findFilmsByRating(filmDTO.getRating());
-            resultList.addAll(name);
-            resultList.addAll(year);
-            resultList.addAll(rating);
-            return resultList;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Film> criteriaQuery = criteriaBuilder.createQuery(Film.class);
+        Root<Film> filmRoot = criteriaQuery.from(Film.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if(filmDTO.getFilmName() != null) {
+            Predicate predicateForName = criteriaBuilder.like(filmRoot.get("filmName"), "%" + filmDTO.getFilmName() + "%");
+            predicates.add(predicateForName);
         }
-        return null;
+        if(filmDTO.getYear() != null){
+            Predicate predicateForYear = criteriaBuilder.equal(filmRoot.get("year"), filmDTO.getYear());
+            predicates.add(predicateForYear);
+        }
+        if(filmDTO.getRating() != null) {
+            Predicate predicateForRating = criteriaBuilder.equal(filmRoot.get("rating"), filmDTO.getRating());
+            predicates.add(predicateForRating);
+        }
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+        criteriaQuery.orderBy(criteriaBuilder.desc(filmRoot.get("filmId")));
+        List<Film> films = entityManager.createQuery(criteriaQuery).setFirstResult((int) pageRequest.getOffset()).setMaxResults(pageRequest.getPageSize()).getResultList();
+        return films;
     }
-    @Override
-    public List<Film> sortByParamNameAndDirection(List<Film> list, String name, String direction) {
-    return null;
-    }
-
 
 }
 
