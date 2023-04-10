@@ -1,8 +1,10 @@
 package com.work.filmsbase.controller;
 import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
+import com.work.filmsbase.DTO.MailDTO;
 import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
+import com.work.filmsbase.service.EmailServiceImpl;
 import com.work.filmsbase.service.FilmServiceImpl;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +24,15 @@ import java.util.List;
 public class FilmController {
     FilmServiceImpl filmService;
     FilmMapper filmMapper;
+    EmailServiceImpl emailService;
+    MailDTO mailDTO;
 
     @Autowired
-    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper) {
+    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper, EmailServiceImpl emailService, MailDTO mailDTO) {
         this.filmService = filmService;
         this.filmMapper = filmMapper;
+        this.emailService = emailService;
+        this.mailDTO = mailDTO;
     }
 
     @RequestMapping(value = "/films/search-by-keyword", method = RequestMethod.GET)
@@ -34,6 +40,9 @@ public class FilmController {
         try {
             List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
             List<Film> sendList = filmService.copyFilmsInDataBase(response);
+            if(!sendList.isEmpty()) {
+                emailService.sendEmailWithAttachment(sendList);
+            }
             log.info("response is {}", response);
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
