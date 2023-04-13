@@ -12,5 +12,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
     boolean existsFilmByFilmId(Long filmId);
     @Override
     <S extends Film> S save(S entity);
-    List<Film> findFilmByFilmName(String name, Pageable pageable);
+    Film findFilmsByFilmId(Long filmId);
+
 }

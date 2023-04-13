@@ -1,6 +1,5 @@
 package com.work.filmsbase.service;
 
-import com.work.filmsbase.DTO.MailDTO;
 import com.work.filmsbase.model.Film;
 
 import javax.mail.MessagingException;

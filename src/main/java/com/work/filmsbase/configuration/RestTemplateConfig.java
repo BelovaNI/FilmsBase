@@ -12,7 +12,6 @@ public class RestTemplateConfig {
     }
     @Bean
     public RestTemplate restTemplate(){
-//        return new RestTemplateBuilder().rootUri(configProperties.getUrl()).build();
         return new RestTemplate();
     }
 }

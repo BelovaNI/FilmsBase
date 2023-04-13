@@ -1,12 +1,17 @@
 package com.work.filmsbase.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.work.filmsbase.model.Genre;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
-@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor
+import javax.persistence.Column;
+
+
+@Data
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class FilmDTO {
     @JsonIgnore
     private Long id;
@@ -20,16 +25,10 @@ public class FilmDTO {
     private Double rating;
     @JsonSetter("description")
     private String description;
-
-    @Override
-    public String toString() {
-        return "FilmDTO{" +
-                "id=" + id +
-                ", filmId=" + filmId +
-                ", filmName='" + filmName + '\'' +
-                ", year=" + year +
-                ", rating=" + rating +
-                ", description='" + description + '\'' +
-                '}';
-    }
+    @JsonSetter("genres")
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private Genre[] genres;
+    @JsonIgnore
+    private boolean viewed;
 }

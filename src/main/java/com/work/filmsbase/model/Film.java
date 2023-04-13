@@ -1,16 +1,20 @@
 package com.work.filmsbase.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
-@Entity
+@Entity(name = "film")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Table
+@Table(name = "film")
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class Film implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +30,12 @@ public class Film implements Serializable {
     private Double rating;
     @JsonSetter("description")
     private String description;
-
-    public Film(@NonNull Long filmId, @NonNull String filmName, @NonNull Integer year, @NonNull Double rating, @NonNull String description) {
-        this.filmId = filmId;
-        this.filmName = filmName;
-        this.year = year;
-        this.rating = rating;
-        this.description = description;
-    }
+    @JsonSetter("genres")
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private Genre[] genres;
+    @JsonIgnore
+    private boolean viewed;
 
     @Override
     public String toString() {
@@ -42,19 +44,7 @@ public class Film implements Serializable {
                 "название - " + filmName + '\n' +
                 "год - " + year + '\n' +
                 "рейтинг - " + rating + '\n' +
-                "описание - " + description + '\n';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Film film = (Film) o;
-        return Objects.equals(filmId, film.filmId) && Objects.equals(filmName, film.filmName) && Objects.equals(year, film.year) && Objects.equals(rating, film.rating) && Objects.equals(description, film.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(filmId, filmName, year, rating, description);
+                "описание - " + description + '\n' +
+                "жанр - " + genres + '\n';
     }
 }

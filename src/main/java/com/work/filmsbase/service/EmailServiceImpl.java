@@ -12,25 +12,19 @@ import java.util.List;
 @Service
 public class EmailServiceImpl implements EmailService {
     public JavaMailSender emailSender;
-    private String toAddress = "nadine241197@gmail.com";
-    private String subject = "List of films";
-    private String message = "This films saved in your films base";
-    private String from = "filmsbase6@gmail.com";
-
     @Autowired
     public EmailServiceImpl(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
-
     @Override
     public void sendEmailWithAttachment(List<Film> list) {
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-            messageHelper.setFrom(from);
-            messageHelper.setTo(toAddress);
-            messageHelper.setSubject(subject);
-            messageHelper.setText(message);
+            messageHelper.setFrom("filmsbase6@gmail.com");
+            messageHelper.setTo("nadine241197@gmail.com");
+            messageHelper.setSubject("List of films");
+            messageHelper.setText("This films saved in your films base");
             File csvFile = new File("films.csv");
             FileWriter fileWriter = new FileWriter(csvFile);
             for(Film f: list) {

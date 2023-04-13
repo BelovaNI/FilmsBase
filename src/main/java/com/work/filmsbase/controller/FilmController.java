@@ -1,7 +1,6 @@
 package com.work.filmsbase.controller;
 import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
-import com.work.filmsbase.DTO.MailDTO;
 import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.EmailServiceImpl;
@@ -13,9 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @NoArgsConstructor
 @RequestMapping("")
@@ -25,14 +23,12 @@ public class FilmController {
     FilmServiceImpl filmService;
     FilmMapper filmMapper;
     EmailServiceImpl emailService;
-    MailDTO mailDTO;
 
     @Autowired
-    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper, EmailServiceImpl emailService, MailDTO mailDTO) {
+    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper, EmailServiceImpl emailService) {
         this.filmService = filmService;
         this.filmMapper = filmMapper;
         this.emailService = emailService;
-        this.mailDTO = mailDTO;
     }
 
     @RequestMapping(value = "/films/search-by-keyword", method = RequestMethod.GET)
@@ -40,7 +36,7 @@ public class FilmController {
         try {
             List<Film> response = filmService.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
             List<Film> sendList = filmService.copyFilmsInDataBase(response);
-            if(!sendList.isEmpty()) {
+            if (!sendList.isEmpty()) {
                 emailService.sendEmailWithAttachment(sendList);
             }
             log.info("response is {}", response);
@@ -53,15 +49,28 @@ public class FilmController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchFilmInDB(@ModelAttribute FilmDTO filmDTO, FilmFilterDTO filmFilterDTO,
-                                 @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-                                 @RequestParam(name = "size", required = false, defaultValue = "2") int size) throws NullPointerException {
+    public List<Film> searchFilmInDB(@ModelAttribute FilmDTO filmDTO, FilmFilterDTO filmFilterDTO,
+                                     @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                     @RequestParam(name = "size", required = false, defaultValue = "2") int size) throws NullPointerException {
         try {
             List<Film> answer = filmService.searchFromDataBase(filmDTO, PageRequest.of(page, size));
-            return answer.toString();
-        }catch (Exception e){
-            return "Не найдены параметры для поиска " + e;
+            return answer;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+    @RequestMapping(value = "/mark", method = RequestMethod.GET)
+    public String markFilmAsViewed(Long filmId) {
+        try {
+            Optional<Long> optLong = Optional.ofNullable(filmId);
+            Long value = optLong.orElse(1091L);
+            Film film1 = filmService.markFilmAsViewed(value);
+            return film1.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
