@@ -6,14 +6,14 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 import javax.persistence.Column;
 
 
 @Data
-@TypeDef(name = "json", typeClass = JsonType.class)
+@TypeDef(name = "jsonb", typeClass = JsonType.class)
 public class FilmDTO {
-    @JsonIgnore
+    @JsonSetter
+    @Column(name = "id")
     private Long id;
     @JsonSetter("filmId")
     private Long filmId;
@@ -26,8 +26,8 @@ public class FilmDTO {
     @JsonSetter("description")
     private String description;
     @JsonSetter("genres")
-    @Type(type = "json")
-    @Column(columnDefinition = "json")
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
     private Genre[] genres;
     @JsonIgnore
     private boolean viewed;

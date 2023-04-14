@@ -13,12 +13,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "film")
-@TypeDef(name = "json", typeClass = JsonType.class)
+@Table
+@TypeDef(name = "jsonb", typeClass = JsonType.class)
 public class Film implements Serializable {
     @Id
+    @JsonSetter
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
     @JsonSetter("filmId")
     private Long filmId;
@@ -31,8 +32,8 @@ public class Film implements Serializable {
     @JsonSetter("description")
     private String description;
     @JsonSetter("genres")
-    @Type(type = "json")
-    @Column(columnDefinition = "json")
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
     private Genre[] genres;
     @JsonIgnore
     private boolean viewed;
