@@ -13,5 +13,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
     @Override
     <S extends Film> S save(S entity);
     Film findFilmsByFilmId(Long filmId);
+    List<Film> findFilmsByGenresAndViewed(String genres, Boolean viewed);
 
 }

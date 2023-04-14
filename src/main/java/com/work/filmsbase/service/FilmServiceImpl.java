@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -29,7 +28,6 @@ public class FilmServiceImpl implements FilmService{
     RestTemplateClient restTemplateClient;
     FilmRepository filmRepository;
     EntityManager entityManager;
-    JavaMailSender javaMailSender;
     @Autowired
     public FilmServiceImpl(FilmMapper filmMapper, RestTemplateClient restTemplateClient, FilmRepository filmRepository, EntityManager entityManager) {
         this.filmMapper = filmMapper;
@@ -94,6 +92,14 @@ public class FilmServiceImpl implements FilmService{
         film.setViewed(true);
         filmRepository.save(film);
         return film;
+    }
+
+    List<Film> findFilmsByGenresAndViewed(String genres, Boolean viewed) {
+        List<Film> films = new ArrayList<>();
+        if (genres != null) {
+            films = filmRepository.findFilmsByGenresAndViewed(genres, viewed);
+        }
+        return films;
     }
 }
 

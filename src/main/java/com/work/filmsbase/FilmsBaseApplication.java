@@ -11,8 +11,9 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-
+@EnableScheduling
 @SpringBootApplication
 @EnableConfigurationProperties(ConfigProperties.class)
 public class FilmsBaseApplication {

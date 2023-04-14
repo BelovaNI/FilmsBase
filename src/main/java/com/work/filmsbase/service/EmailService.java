@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EmailService {
     void sendEmailWithAttachment(List<Film> list) throws MessagingException;
+    void sendEmailForEveryDayOfWeekWithAttachment(List<Film> list) throws MessagingException;
 }

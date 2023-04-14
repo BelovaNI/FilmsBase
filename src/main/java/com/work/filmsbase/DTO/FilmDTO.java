@@ -6,7 +6,6 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 import javax.persistence.Column;
 
 
