@@ -103,6 +103,10 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.6.15.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

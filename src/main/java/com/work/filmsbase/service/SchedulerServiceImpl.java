@@ -1,9 +1,9 @@
 package com.work.filmsbase.service;
+import com.work.filmsbase.jms.JmsProducer;
 import com.work.filmsbase.model.Film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,14 +18,15 @@ public class SchedulerServiceImpl implements SchedulerService{
     EntityManager em;
     EmailServiceImpl emailService;
     FilmServiceImpl filmService;
+    JmsProducer jmsProducer;
     @Autowired
-    public SchedulerServiceImpl(EmailServiceImpl emailService, FilmServiceImpl filmService, EntityManager em) {
+    public SchedulerServiceImpl(EmailServiceImpl emailService, FilmServiceImpl filmService, EntityManager em, JmsProducer jmsProducer) {
         this.emailService = emailService;
         this.filmService = filmService;
         this.em = em;
+        this.jmsProducer=jmsProducer;
     }
     @Override
-    @Scheduled(cron = "16 00 * * * *")
     public void sendScheduledEmail(){
         try {
             LocalDate date = LocalDate.now();
