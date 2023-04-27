@@ -1,19 +1,12 @@
 package com.work.filmsbase;
-
 import com.work.filmsbase.DTO.FilmFilterDTO;
 import com.work.filmsbase.configuration.ConfigProperties;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
-@EnableScheduling
+
 @SpringBootApplication
 @EnableConfigurationProperties(ConfigProperties.class)
 public class FilmsBaseApplication {
