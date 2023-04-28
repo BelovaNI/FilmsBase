@@ -23,11 +23,12 @@ import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
-public class FilmServiceImpl implements FilmService{
+public class FilmServiceImpl implements FilmService {
     FilmMapper filmMapper;
     RestTemplateClient restTemplateClient;
     FilmRepository filmRepository;
     EntityManager entityManager;
+
     @Autowired
     public FilmServiceImpl(FilmMapper filmMapper, RestTemplateClient restTemplateClient, FilmRepository filmRepository, EntityManager entityManager) {
         this.filmMapper = filmMapper;
@@ -35,10 +36,12 @@ public class FilmServiceImpl implements FilmService{
         this.filmRepository = filmRepository;
         this.entityManager = entityManager;
     }
+
     @Override
     public <S extends Film> S save(S entity) {
         return filmRepository.save(entity);
     }
+
     @Override
     public List<Film> getAllFilmsByFilterFromKinopoisk(FilmFilterDTO filmFilterDTO) {
         ResponseEntity<FilmGetResponseDTO> responseEntity = restTemplateClient.getAllFilmsByFilterFromKinopoisk(filmFilterDTO);
@@ -51,10 +54,11 @@ public class FilmServiceImpl implements FilmService{
         }
         return null;
     }
+
     @Override
     public List<Film> copyFilmsInDataBase(List<Film> list) {
         List<Film> sendList = new ArrayList<>();
-        for (Film film: list) {
+        for (Film film : list) {
             if (!filmRepository.existsFilmByFilmId(film.getFilmId())) {
                 save(film);
                 sendList.add(film);
@@ -62,38 +66,41 @@ public class FilmServiceImpl implements FilmService{
         }
         return sendList;
     }
+
     @Override
     public List<Film> searchFromDataBase(FilmDTO filmDTO, PageRequest pageRequest) {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Film> criteriaQuery = criteriaBuilder.createQuery(Film.class);
-            Root<Film> filmRoot = criteriaQuery.from(Film.class);
-            List<Predicate> predicates = new ArrayList<>();
-            if (filmDTO.getFilmName() != null) {
-                Predicate predicateForName = criteriaBuilder.like(filmRoot.get("filmName"), "%" + filmDTO.getFilmName() + "%");
-                predicates.add(predicateForName);
-            }
-            if (filmDTO.getYear() != null) {
-                Predicate predicateForYear = criteriaBuilder.equal(filmRoot.get("year"), filmDTO.getYear());
-                predicates.add(predicateForYear);
-            }
-            if (filmDTO.getRating() != null) {
-                Predicate predicateForRating = criteriaBuilder.equal(filmRoot.get("rating"), filmDTO.getRating());
-                predicates.add(predicateForRating);
-            }
-            criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
-            criteriaQuery.orderBy(criteriaBuilder.desc(filmRoot.get("filmId")));
-            List<Film> films = entityManager.createQuery(criteriaQuery).setFirstResult((int) pageRequest.getOffset()).setMaxResults(pageRequest.getPageSize()).getResultList();
-            return films;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Film> criteriaQuery = criteriaBuilder.createQuery(Film.class);
+        Root<Film> filmRoot = criteriaQuery.from(Film.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if (filmDTO.getFilmName() != null) {
+            Predicate predicateForName = criteriaBuilder.like(filmRoot.get("filmName"), "%" + filmDTO.getFilmName() + "%");
+            predicates.add(predicateForName);
+        }
+        if (filmDTO.getYear() != null) {
+            Predicate predicateForYear = criteriaBuilder.equal(filmRoot.get("year"), filmDTO.getYear());
+            predicates.add(predicateForYear);
+        }
+        if (filmDTO.getRating() != null) {
+            Predicate predicateForRating = criteriaBuilder.equal(filmRoot.get("rating"), filmDTO.getRating());
+            predicates.add(predicateForRating);
+        }
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+        criteriaQuery.orderBy(criteriaBuilder.desc(filmRoot.get("filmId")));
+        List<Film> films = entityManager.createQuery(criteriaQuery).setFirstResult((int) pageRequest.getOffset()).setMaxResults(pageRequest.getPageSize()).getResultList();
+        return films;
     }
 
     @Override
     public Film markFilmAsViewed(Long filmId) {
         Film film = filmRepository.findFilmsByFilmId(filmId);
-        film.setViewed(true);
-        filmRepository.save(film);
-        return film;
+        if (film != null) {
+            film.setViewed(true);
+            filmRepository.save(film);
+            return film;
+        }
+        return null;
     }
-
 }
 
 

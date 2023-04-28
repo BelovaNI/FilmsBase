@@ -1,12 +1,12 @@
 package com.work.filmsbase.controller;
 import com.work.filmsbase.DTO.FilmDTO;
 import com.work.filmsbase.DTO.FilmFilterDTO;
-import com.work.filmsbase.mapping.FilmMapper;
 import com.work.filmsbase.model.Film;
 import com.work.filmsbase.service.EmailServiceImpl;
 import com.work.filmsbase.service.FilmServiceImpl;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,11 @@ import java.util.Optional;
 @Slf4j
 public class FilmController {
     FilmServiceImpl filmService;
-    FilmMapper filmMapper;
     EmailServiceImpl emailService;
 
     @Autowired
-    public FilmController(FilmServiceImpl filmService, FilmMapper filmMapper, EmailServiceImpl emailService) {
+    public FilmController(FilmServiceImpl filmService, EmailServiceImpl emailService) {
         this.filmService = filmService;
-        this.filmMapper = filmMapper;
         this.emailService = emailService;
     }
 
@@ -64,13 +62,14 @@ public class FilmController {
     public String markFilmAsViewed(Long filmId) {
         try {
             Optional<Long> optLong = Optional.ofNullable(filmId);
-            Long value = optLong.orElse(1091L);
+            Long value = optLong.orElse(328L);
             Film film1 = filmService.markFilmAsViewed(value);
             return film1.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            String errorMessage;
+            errorMessage = "Фильм с данным идентификатором не найден в базе данных  " + e + " <== error";
+            return String.valueOf(new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND));
         }
-        return null;
     }
 }
 

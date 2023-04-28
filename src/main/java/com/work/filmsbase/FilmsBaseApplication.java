@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableConfigurationProperties(ConfigProperties.class)
+@EnableConfigurationProperties({ConfigProperties.class})
 public class FilmsBaseApplication {
     public static void main(String[] args) {
         SpringApplication.run(FilmsBaseApplication.class, args);

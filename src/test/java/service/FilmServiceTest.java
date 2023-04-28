@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 public class FilmServiceTest {
-    private FilmServiceImpl filmService;
+    FilmServiceImpl filmService;
     FilmMapper filmMapperMock;
     RestTemplateClient restTemplateClientMock;
     FilmRepository repositoryMock;
